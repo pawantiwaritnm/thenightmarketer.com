@@ -137,6 +137,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['authadmin']], function () {
     Route::match(['get', 'post'], '/blog-category-store', 'BlogCategoryController@store')->name('blog-category-store')->middleware('permission:Blog Categories,add');
     Route::match(['get', 'post'], '/blog-category-edit/{id?}', 'BlogCategoryController@edit')->name('blog-category-edit')->middleware('permission:Blog Categories,edit');
     Route::match(['get', 'post'], '/blog-category-update/{id?}', 'BlogCategoryController@update')->name('blog-category-update')->middleware('permission:Blog Categories,edit');
+    Route::post('/blog-category/{id}/toggle-status', [BlogCategoryController::class, 'toggleStatus'])->name('blog-category.toggleStatus')->middleware('permission:Blog Categories,edit');
     Route::delete('/blog-category-destroy/{id}', [BlogCategoryController::class, 'destroy'])->name('blog-category-destroy')->middleware('permission:Blog Categories,delete');
 
 
