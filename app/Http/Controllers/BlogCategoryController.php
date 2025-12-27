@@ -78,9 +78,11 @@ class BlogCategoryController extends Controller
     /**
      * Remove the specified resource from storage (soft delete).
      */
-    public function destroy(BlogCategory $blogCategory)
+    public function destroy($id)
     {
-        // Soft delete: Set status to -1 instead of actually deleting
+        $blogCategory = BlogCategory::findOrFail($id);
+
+        // Soft delete: Set status to -1 instead of actually delating
         $blogCategory->update(['status' => -1]);
         return redirect()
             ->route("blog-category-list")
