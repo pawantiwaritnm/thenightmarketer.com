@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "electric-charge-424110-g9",
+  "private_key_id": "a6d0eb9e15444255d63ed637e875f62619b1f938",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDhJVc0O1517T/E\n7SjauGkR7T2+2PoesqhghwLPY0+OnViSRHt5N86v7FfyoEBWD7U3ziQzCZAOIt7f\nl1aNyOJh1FDzC28Tlh9wRTg4BB46ruasa2fJE+9rLjGBfHaHsnhEJHdyuF69gFkX\nyqarV2OlPsn2NOGy0xiuo+AFCqSpi8mELV0LZthDRL+FDoNX1DLD4lTrtEagvjhS\nx6962NIO/ZwZeLx9Ynm5iyOj8zWmBvC4+95Hs8fBGW+mJtZXVgNWyeppueuxakdG\njr790kq8YLcifOGqm0XO4SdZWtPrdB9hM+R6hRaCvyzVf0RM9Jtm9WXAA5RqqY31\nbBcquFf/AgMBAAECggEANMskPSe0uTNWMi+oVk1Kufzm7yMC14LuL6BI/OddJuRn\nefjb+SsoaKEjaE3CeEu7oyfP3jXeVSpBF63tilayGt2F08/5Dl8z5QgeLChvDDSp\n+4E9920YxYmx6xqL0rr7L4NbjQeFk6sOeSE4XtIhmAR2qChzShLs5TqhE52Qyf6A\nOk2VJuhZeo3YvSRulYkEaGnAKHILk9oWprqcGJmLxKzhz4yQ13C72+UJh8DNZLpc\nduuxRPqLqSV5xTa4g2cUmXvZZBVUoYO5KKtso/OlrlBBPeyGsm+6HunQfi8nPhQK\nbBp604X3sN71cx0cM5ImTzQkYUIYPDjg8PAaNCnl8QKBgQDzq2dtqbPkIMs4g/W5\nvzBlkVe/KA84TOE4+/FgEj8/3aSkFloYrkR6M6TGfBGxgFMUbj7Fluf0Bb3hyZ4C\n/SAHwBVMKNlBC9cbpngr28MfZ0zLx8cMtW9+lwHXRTKmi3tjI/7Q9Z6COOJzOIKP\nKoKwdGDF7abrrnL450qS7W8FcQKBgQDsifkgpB3YUymFFrd9U2FcJTyjeI+1Kh09\nsfR5L0ipq1Xg/cH4ZISZ9C5a4IbiDQkOsAldR34Lyv9qzOiu702c5GbbtTeUM7U5\n1BpiZovH/WWNtrge0n9eqJwp8GWfm18JDJdN8MjoJnf6LBMZhjDAZ3UnqlcahjzX\n16G+Rfa8bwKBgC4PJEnSXjKtEDzqlLQ7s4Y/Zvq3M8lMnvYKiaHDUTldSBXMM9Oe\nfUssH+V05lNLEmk2PZ9T2xyBSVc4qSmfd0J/yIbQ4eAtwMd1PBnuPH/fIuESLkn0\nsdKX8L0kU2Kv0u72iuAszX2ICyYEdIljW7jHBtPjDD5Yh1sNPUdwoh/BAoGBAIVX\nAek0mt5ngvBTbfxoFGotU5GTVO97XiB5QKdP0FZVD4RViBLOFzHyRG9WQrMLRh/R\nfHXo51Ueif1apZB3tfjLiHAyJ7KTs4V126m8xO9oGOdaKVC2uLZTtjSuH5tpqpkf\nT+vP4HF9vgR49AtfafwMVi6WB6QcKBBErhjkt8JhAoGABFOWOD0fFEMqSVC6q0Pd\nNjUE4zAnwY3B7ibNOhkWuRrC/GeoqgNG+WMNPZfzvdeXIQFK4zexoTg9xTb4xryJ\n5X60bvwye3lZtC3KGbAQyHOOn+dqUE6a5LlC7zULSpCcghVZbMMuHmiwa3Mu6Kpp\nbx7z795Z6gDAWVpJKcJEf+8=\n-----END PRIVATE KEY-----\n",
+  "client_email": "google-sheet-api@electric-charge-424110-g9.iam.gserviceaccount.com",
+  "client_id": "103950728734736005384",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/google-sheet-api%40electric-charge-424110-g9.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

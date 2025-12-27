@@ -1,0 +1,52 @@
+name: Laravel CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Add server to known hosts
+      env:
+        SERVER_HOST: ${{ secrets.PRODUCTION_SERVER_HOST }}
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan "$SERVER_HOST" >> ~/.ssh/known_hosts
+        chmod 600 ~/.ssh/known_hosts
+
+    - name: Deploy to production server
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.PRODUCTION_SERVER_HOST }}
+        username: ${{ secrets.PRODUCTION_SERVER_USERNAME }}
+        password: ${{ secrets.PRODUCTION_SERVER_PASSWORD }}
+        script: |
+          cd /home/cicduser/htdocs/thenightmarketer.com
+          git pull origin main
+          
+          composer install --no-interaction --no-dev --prefer-dist --ignore-platform-reqs
+          php artisan migrate --force
+          php artisan optimize
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+          
+    - name: Verify deployment
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.PRODUCTION_SERVER_HOST }}
+        username: ${{ secrets.PRODUCTION_SERVER_USERNAME }}
+        password: ${{ secrets.PRODUCTION_SERVER_PASSWORD }}
+        script: |
+          cd /home/cicduser/htdocs/thenightmarketer.com
+          php artisan --version
+          echo "Laravel deployment completed successfully" 

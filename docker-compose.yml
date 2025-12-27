@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  # Nginx Service
+  nginx:
+    image: nginx:alpine
+    container_name: thenightmarketer_nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
+    networks:
+      - crmnight_network
+
+  # PHP-FPM Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: thenightmarketer_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    depends_on:
+      - mysql
+    networks:
+      - crmnight_network
+
+  # MySQL Service
+  mysql:
+    image: mysql:8.0
+    container_name: thenightmarketer_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: thenightcrmDB
+      MYSQL_USER: crmuser
+      MYSQL_PASSWORD: crmpassword
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./thenightcrmDB.sql:/docker-entrypoint-initdb.d/dump.sql
+    networks:
+      - crmnight_network
+
+  # phpMyAdmin Service
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: thenightmarketer_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+    networks:
+      - crmnight_network
+
+  # Redis Service (for caching and sessions)
+  redis:
+    image: redis:alpine
+    container_name: thenightmarketer_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - crmnight_network
+
+  # Mailhog Service (for email testing)
+  mailhog:
+    image: mailhog/mailhog
+    container_name: thenightmarketer_mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - crmnight_network
+
+networks:
+  crmnight_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
