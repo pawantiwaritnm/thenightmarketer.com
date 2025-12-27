@@ -11,7 +11,10 @@ class CategoryController extends Controller
 {
     public function index()
 {
-    $categories = Category::with('parent')->paginate(10);
+    $categories = Category::with('parent')
+        ->where('status', '!=', -1)
+        ->orderBy('id', 'desc')
+        ->paginate(10);
     return view('admin.pages.categories.index', compact('categories'));
 }
 
@@ -85,10 +88,8 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        if ($category->image) {
-            Storage::disk('public')->delete($category->image);
-        }
-        $category->delete();
+        // Soft delete: Set status to -1 instead of actually deleting
+        $category->update(['status' => -1]);
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
     }
     public function updateStatus(Request $request, $id)

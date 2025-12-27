@@ -146,6 +146,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['authadmin']], function () {
     Route::post('/services', [ServiceController::class, 'store'])->name('services.store')->middleware('permission:Services,add');
     Route::get('/services/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit')->middleware('permission:Services,edit');
     Route::put('/services/{service}', [ServiceController::class, 'update'])->name('services.update')->middleware('permission:Services,edit');
+    Route::post('/services/{id}/toggle-status', [ServiceController::class, 'toggleStatus'])->name('services.toggleStatus')->middleware('permission:Services,edit');
     Route::delete('/services/{service}', [ServiceController::class, 'destroy'])->name('services.destroy')->middleware('permission:Services,delete');
 
 

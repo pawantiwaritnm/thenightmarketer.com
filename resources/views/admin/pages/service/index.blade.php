@@ -68,6 +68,14 @@
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 @endif
+                                @if(can_access('Services', 'edit'))
+                                <button type="button" class="btn btn-{{ $service->status == 1 ? 'success' : 'secondary' }} toggle-status-btn"
+                                        data-id="{{ $service->id }}"
+                                        data-status="{{ $service->status }}"
+                                        title="{{ $service->status == 1 ? 'Set Inactive' : 'Set Active' }}">
+                                    <i class="fas fa-toggle-{{ $service->status == 1 ? 'on' : 'off' }}"></i>
+                                </button>
+                                @endif
                                 @if(can_access('Services', 'delete'))
                                 <button type="button" class="btn btn-danger delete-btn"
                                         data-id="{{ $service->id }}"
@@ -97,14 +105,50 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    // Delete service
+    // Toggle service status (between 1 and 0 only)
+    $('.toggle-status-btn').click(function() {
+        const serviceId = $(this).data('id');
+        const currentStatus = $(this).data('status');
+        const newStatus = currentStatus == 1 ? 0 : 1;
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `Do you want to ${newStatus == 1 ? 'activate' : 'deactivate'} this service?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, proceed!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/admin/services/' + serviceId + '/toggle-status',
+                    type: 'POST',
+                    data: { status: newStatus },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        showMessage('success', `Service ${newStatus == 1 ? 'activated' : 'deactivated'} successfully`);
+                        setTimeout(() => location.reload(), 1500);
+                    },
+                    error: function(error) {
+                        console.error(error);
+                        showMessage('error', 'Failed to update service status');
+                    }
+                });
+            }
+        });
+    });
+
+    // Delete service (soft delete - sets status to -1)
     $('.delete-btn').click(function() {
         const serviceId = $(this).data('id');
         const serviceTitle = $(this).data('title');
 
         Swal.fire({
             title: 'Are you sure?',
-            text: `Delete service "${serviceTitle}"? This will also delete all sections, items, and FAQs!`,
+            text: `Delete service "${serviceTitle}"?`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',

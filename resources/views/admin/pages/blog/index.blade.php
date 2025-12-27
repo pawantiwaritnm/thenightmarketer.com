@@ -122,11 +122,11 @@
                                     </a>
                                     @endif
                                     @if (can_access('Blogs', 'edit') && session('role') == 'Admin')
-                                    <button type="button" class="btn btn-{{ $blog->status == 1 ? 'warning' : 'success' }} toggle-status-btn"
+                                    <button type="button" class="btn btn-{{ $blog->status == 1 ? 'success' : 'secondary' }} toggle-status-btn"
                                             data-id="{{ $blog->id }}"
                                             data-status="{{ $blog->status }}"
-                                            title="{{ $blog->status == 1 ? 'Deactivate' : 'Activate' }}">
-                                        <i class="fas fa-{{ $blog->status == 1 ? 'toggle-off' : 'toggle-on' }}"></i>
+                                            title="{{ $blog->status == 1 ? 'Set Inactive' : 'Set Active' }}">
+                                        <i class="fas fa-toggle-{{ $blog->status == 1 ? 'on' : 'off' }}"></i>
                                     </button>
                                     @endif
                                     @if (can_access('Blogs', 'delete'))
@@ -163,7 +163,7 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    // Toggle blog status
+    // Toggle blog status (between 1 and 0 only)
     $('.toggle-status-btn').click(function() {
         const blogId = $(this).data('id');
         const currentStatus = $(this).data('status');

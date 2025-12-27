@@ -47,15 +47,27 @@
                         </td>
                         <td>
                             <div class="btn-group btn-group-sm">
+                                @if(can_access('Blog Categories', 'edit'))
                                 <a href="{{ route('blog-category-edit', $cat) }}" class="btn btn-primary" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
+                                @endif
+                                @if(can_access('Blog Categories', 'edit'))
+                                <button type="button" class="btn btn-{{ $cat->status == 1 ? 'success' : 'secondary' }} toggle-status-btn"
+                                        data-id="{{ $cat->id }}"
+                                        data-status="{{ $cat->status }}"
+                                        title="{{ $cat->status == 1 ? 'Set Inactive' : 'Set Active' }}">
+                                    <i class="fas fa-toggle-{{ $cat->status == 1 ? 'on' : 'off' }}"></i>
+                                </button>
+                                @endif
+                                @if(can_access('Blog Categories', 'delete'))
                                 <button type="button" class="btn btn-danger delete-btn"
                                         data-id="{{ $cat->id }}"
                                         data-name="{{ $cat->name }}"
                                         title="Delete">
                                     <i class="fas fa-trash"></i>
                                 </button>
+                                @endif
                             </div>
                         </td>
                     </tr>
@@ -77,7 +89,43 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    // Delete category
+    // Toggle category status (between 1 and 0 only)
+    $('.toggle-status-btn').click(function() {
+        const catId = $(this).data('id');
+        const currentStatus = $(this).data('status');
+        const newStatus = currentStatus == 1 ? 0 : 1;
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `Do you want to ${newStatus == 1 ? 'activate' : 'deactivate'} this category?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, proceed!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/admin/blog-category/' + catId + '/toggle-status',
+                    type: 'POST',
+                    data: { status: newStatus },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        showMessage('success', `Category ${newStatus == 1 ? 'activated' : 'deactivated'} successfully`);
+                        setTimeout(() => location.reload(), 1500);
+                    },
+                    error: function(error) {
+                        console.error(error);
+                        showMessage('error', 'Failed to update category status');
+                    }
+                });
+            }
+        });
+    });
+
+    // Delete category (soft delete - sets status to -1)
     $('.delete-btn').click(function() {
         const catId = $(this).data('id');
         const catName = $(this).data('name');
@@ -95,7 +143,7 @@ $(document).ready(function() {
                 // Create and submit form
                 const form = $('<form>', {
                     'method': 'POST',
-                    'action': '/admin/blog-category/' + catId
+                    'action': '/admin/blog-category-destroy/' + catId
                 });
 
                 form.append($('<input>', {

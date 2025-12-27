@@ -10,10 +10,13 @@ use App\Helpers\SitemapHelper;
 
 class ServiceController extends Controller
 {
-    // Display all services
+    // Display all services (excluding deleted ones)
     public function index()
     {
-        $services = Service::with('sections.items')->get();
+        $services = Service::with('sections.items')
+            ->where('status', '!=', -1)
+            ->orderBy('id', 'desc')
+            ->get();
         return view('admin.pages.service.index', compact('services'));
     }
 
@@ -383,31 +386,21 @@ class ServiceController extends Controller
         return redirect()->route('services.index')->with('success', 'Service updated successfully!');
     }
 
-    // Delete a service
+    // Toggle service status
+    public function toggleStatus(Request $request, $id)
+    {
+        $service = Service::findOrFail($id);
+        $service->update(['status' => $request->status]);
+
+        return response()->json(['message' => 'Service status updated successfully']);
+    }
+
+    // Delete a service (soft delete)
     public function destroy(Service $service)
     {
-        // Delete banners
-        if ($service->desktop_banner) {
-            \Storage::disk('public')->delete($service->desktop_banner);
-        }
-        if ($service->mobile_banner) {
-            \Storage::disk('public')->delete($service->mobile_banner);
-        }
+        // Soft delete: Set status to -1 instead of actually deleting
+        $service->update(['status' => -1]);
 
-        // Delete sections and their items
-        foreach ($service->sections as $section) {
-            foreach ($section->items as $item) {
-                if ($item->image) {
-                    \Storage::disk('public')->delete($item->image);
-                }
-            }
-            if ($section->image) {
-                \Storage::disk('public')->delete($section->image);
-            }
-        }
-
-        $service->delete();
-        
         SitemapHelper::update();
 
         return redirect()->route('services.index')->with('success', 'Service deleted successfully!');

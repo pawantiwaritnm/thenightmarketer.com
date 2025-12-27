@@ -14,9 +14,11 @@ class BlogCategoryController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    { 
-        
-        $categories = BlogCategory::withCount('blogs')->get();
+    {
+        $categories = BlogCategory::withCount('blogs')
+            ->where('status', '!=', -1)
+            ->orderBy('id', 'desc')
+            ->get();
         return view($this->path . "index", compact("categories"));
     }
 
@@ -74,13 +76,25 @@ class BlogCategoryController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storage (soft delete).
      */
     public function destroy(BlogCategory $blogCategory)
     {
-        $blogCategory->delete();
+        // Soft delete: Set status to -1 instead of actually deleting
+        $blogCategory->update(['status' => -1]);
         return redirect()
-            ->route($this->route . "index")
+            ->route("blog-category-list")
             ->with(['status' => 'Success', 'msg' => "Category '{$blogCategory->name}' deleted successfully"]);
+    }
+
+    /**
+     * Toggle category status
+     */
+    public function toggleStatus(Request $request, $id)
+    {
+        $category = BlogCategory::findOrFail($id);
+        $category->update(['status' => $request->status]);
+
+        return response()->json(['message' => 'Category status updated successfully']);
     }
 }

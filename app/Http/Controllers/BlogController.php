@@ -35,10 +35,11 @@ class BlogController extends Controller
 
         // Start building the query for blogs
         $blogsQuery = Blog::query()
+            ->where('status', '!=', -1) // Exclude deleted records
             ->when($query, function ($queryBuilder) use ($query) {
                 return $queryBuilder->where('title', 'like', "%$query%");
             })
-            ->when($status !== null && $status !== -1, function ($queryBuilder) use ($status) {
+            ->when($status !== null && $status !== '', function ($queryBuilder) use ($status) {
                 return $queryBuilder->where('status', $status);
             })
             ->when($authorId, function ($queryBuilder) use ($authorId) {
@@ -275,18 +276,13 @@ if ($request->filled('tags')) {
 
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storage (soft delete).
      */
     public function destroy(Blog $Blog)
     {
-        //deleting images from storage
-        foreach ($Blog->images as $image) {
-            if ($image->image && Storage::exists("public/blogs/{$image->image}"))
-                Storage::delete("public/blogs/{$image->image}");
-            $image->delete();
-        }
-        //deleting blog
-        $Blog->delete();
+        // Soft delete: Set status to -1 instead of actually deleting
+        $Blog->update(['status' => -1]);
+
         //redirecting user back to blogs list page
         return redirect()
             ->route("blog-list")
