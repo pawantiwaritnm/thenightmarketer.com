@@ -12,7 +12,7 @@ class Blog extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'title', 'subtitle', 'desc','slug','date', 'sortOrder', 'image', 'author_id', 'metaTitle', 'metaKeyword', 'metaDesc', 'is_approved', 'first_approved', 'blog_category_id', 'tags', 'share_cnt', 'key_takeaways'
+        'title', 'subtitle', 'desc','slug','date', 'sortOrder', 'image', 'author_id', 'metaTitle', 'metaKeyword', 'metaDesc', 'is_approved', 'first_approved', 'blog_category_id', 'tags', 'share_cnt', 'key_takeaways', 'status'
     ];
     public function category(): BelongsTo
     {

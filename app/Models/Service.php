@@ -36,7 +36,6 @@ class Service extends Model
 
     protected $casts = [
         'stats' => 'array',
-        'status' => 'boolean',
         'is_city' => 'boolean',
     ];
 
