@@ -278,8 +278,10 @@ if ($request->filled('tags')) {
     /**
      * Remove the specified resource from storage (soft delete).
      */
-    public function destroy(Blog $Blog)
+    public function destroy($id)
     {
+        $Blog = Blog::findOrFail($id);
+
         // Soft delete: Set status to -1 instead of actually deleting
         $Blog->update(['status' => -1]);
 
